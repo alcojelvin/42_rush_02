@@ -93,46 +93,35 @@ static void	convert_group(char *buf, int g, char **k, char **v, int size)
 	}
 }
 
-void	convert(char *num, char **k, char **v, int size)
+void    convert(char *num, char **k, char **v, int size)
 {
-	int		groups;
-	int		g;
-	int		first;
-	int		len;
-	int		start;
-	int		end;
-	char	buf[4];
-	int		i;
-	int		pos;
+    int     groups;
+    int     g;
+    int     first;
+    char    buf[4];
 
-	if (num[0] == '0' && num[1] == '\0')
-	{
-		ft_putstr(dict_get("0", k, v, size));
-		return ;
-	}
-	groups = count_groups(num);
-	first = 1;
-	g = groups - 1;
-	while (g >= 0)
-	{
-		len = 0;
-		while (num[len])
-			len++;
-		get_group_bounds(len, g, &start, &end);
-		i = 0;
-		pos = start;
-		while (pos < end)
-			buf[i++] = num[pos++];
-		while (i < 3)
-			buf[i++] = '0';
-		buf[3] = '\0';
-		if (group_nonzero(buf))
-		{
-			if (!first)
-				write(1, " ", 1);
-			convert_group(buf, g, k, v, size);
-			first = 0;
-		}
-		g--;
-	}
+    if (num[0] == '0' && num[1] == '\0')
+    {
+        ft_putstr(dict_get("0", k, v, size));
+        return ;
+    }
+
+    groups = count_groups(num);
+    first = 1;
+    g = groups - 1;
+
+    while (g >= 0)
+    {
+        get_group(num, g, buf);
+
+        if (group_nonzero(buf))
+        {
+            if (!first)
+                write(1, " ", 1);
+
+            convert_group(buf, g, k, v, size);
+            first = 0;
+        }
+        g--;
+    }
 }
